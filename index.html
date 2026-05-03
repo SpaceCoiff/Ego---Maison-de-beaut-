@@ -84,5 +84,51 @@ function toggleMenu(){document.getElementById('menu').classList.toggle('active')
 window.addEventListener('scroll',()=>{document.getElementById('top').classList.toggle('show',window.scrollY>500)})
 function sendBooking(e){e.preventDefault();let nom=document.getElementById('nom').value;let tel=document.getElementById('tel').value;let service=document.getElementById('service').value;let date=document.getElementById('date').value;let msg=document.getElementById('message').value;let text=`Bonjour, je souhaite prendre rendez-vous chez Ego - Maison de Beauté.%0A%0ANom: ${nom}%0ATéléphone: ${tel}%0AService: ${service}%0ADate souhaitée: ${date}%0AMessage: ${msg}`;window.open(`https://wa.me/212661137243?text=${text}`,'_blank')}
 </script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD_4pZIjiXT-gSi5knxXFwwd_XaTjwLFbE",
+  authDomain: "ego---maison-de-beaute.firebaseapp.com",
+  projectId: "ego---maison-de-beaute",
+  storageBucket: "ego---maison-de-beaute.firebasestorage.app",
+  messagingSenderId: "900159031083",
+  appId: "1:900159031083:web:8a202a0ab947b17851676e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.sendBooking = async function(event){
+  event.preventDefault();
+
+  const nom = document.getElementById("nom").value;
+  const telephone = document.getElementById("telephone").value;
+  const service = document.getElementById("service").value;
+  const date = document.getElementById("date").value;
+  const message = document.getElementById("message").value;
+
+  try{
+    await addDoc(collection(db, "reservation"), {
+      nom,
+      telephone,
+      service,
+      date,
+      message,
+      createdAt: new Date()
+    });
+
+    alert("✅ Rendez-vous enregistré !");
+    event.target.reset();
+
+  }catch(error){
+    alert("❌ Erreur Firebase");
+    console.error(error);
+  }
+};
+
+</script>
 </body>
 </html>
