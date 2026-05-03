@@ -79,11 +79,7 @@
 <section class="booking" id="reservation"><div class="container booking-box"><h2>Réservez votre moment beauté</h2><p>Remplissez le formulaire et notre équipe vous contactera rapidement pour confirmer votre rendez-vous.</p><form class="form" onsubmit="sendBooking(event)"><input id="nom" placeholder="Votre nom" required><input id="tel" placeholder="Téléphone" required><select id="service" required><option value="">Choisir un service</option><option>Coiffure</option><option>Onglerie</option><option>Soin visage</option><option>Make-up</option><option>Massage</option></select><input id="date" type="date" required><textarea id="message" placeholder="Message ou préférence d’horaire"></textarea><button class="btn btn-light" type="submit">Envoyer la demande</button></form></div></section>
 
 <footer id="contact"><img src="logo.jpg"><h3>Ego — Maison de Beauté</h3><p>📍 Av Mohamed Belhassan El Ouazzani, Souissi, Rabat, Maroc 10000</p><p>📞 +212 6 61 13 72 43</p><p>✉️ contact@ego-beaute.com</p><div class="socials">Instagram • TikTok • WhatsApp</div></footer><a href="#accueil" class="top" id="top">↑</a>
-<script>
-function toggleMenu(){document.getElementById('menu').classList.toggle('active')}
-window.addEventListener('scroll',()=>{document.getElementById('top').classList.toggle('show',window.scrollY>500)})
-function sendBooking(e){e.preventDefault();let nom=document.getElementById('nom').value;let tel=document.getElementById('tel').value;let service=document.getElementById('service').value;let date=document.getElementById('date').value;let msg=document.getElementById('message').value;let text=`Bonjour, je souhaite prendre rendez-vous chez Ego - Maison de Beauté.%0A%0ANom: ${nom}%0ATéléphone: ${tel}%0AService: ${service}%0ADate souhaitée: ${date}%0AMessage: ${msg}`;window.open(`https://wa.me/212661137243?text=${text}`,'_blank')}
-</script>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
@@ -101,6 +97,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// MENU BURGER
+window.toggleMenu = function(){
+  document.getElementById('menu').classList.toggle('active');
+};
+
+// SCROLL TOP BUTTON
+window.addEventListener('scroll',()=>{
+  document.getElementById('top').classList.toggle('show',window.scrollY>500);
+});
+
+// FORMULAIRE
 window.sendBooking = async function(event){
   event.preventDefault();
 
@@ -111,32 +118,36 @@ window.sendBooking = async function(event){
   const message = document.getElementById("message").value;
 
   try{
-  await addDoc(collection(db, "reservation"), {
-    nom: nom,
-    telephone: telephone,
-    service: service,
-    date: date,
-    message: message,
-    createdAt: new Date()
-  });
+    await addDoc(collection(db, "reservation"), {
+      nom,
+      telephone,
+      service,
+      date,
+      message,
+      createdAt: new Date()
+    });
 
-  const texte = encodeURIComponent(
+    const texte = encodeURIComponent(
 "✨ Bonjour, je souhaite prendre rendez-vous chez *Ego — Maison de Beauté* ✨\n\n" +
-"👤 Nom  : " + nom + "\n" +
+"👤 Nom : " + nom + "\n" +
 "📞 Téléphone : " + telephone + "\n" +
 "💇 Service : " + service + "\n" +
 "📅 Date souhaitée : " + date + "\n\n" +
 "💬 Message :\n" + message + "\n\n" +
 "🌸 Merci, j’attends votre confirmation."
-);
+    );
 
-event.target.reset();
+    event.target.reset();
 
-window.location.href = "https://wa.me/212661137243?text=" + texte;
-}catch(error){
-  alert("❌ Erreur Firebase");
-  console.error(error);
-}
+    // REDIRECTION WHATSAPP (mobile + pc OK)
+    window.location.href = "https://wa.me/212661137243?text=" + texte;
+
+  }catch(error){
+    alert("❌ Erreur Firebase");
+    console.error(error);
+  }
+};
+
 </script>
 </body>
 </html>
