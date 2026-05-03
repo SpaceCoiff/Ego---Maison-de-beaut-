@@ -121,18 +121,17 @@ window.sendBooking = async function(event){
 
   const texte = encodeURIComponent(
 "✨ Bonjour, je souhaite prendre rendez-vous chez *Ego — Maison de Beauté* ✨\n\n" +
-"👤 Nom zbi  : " + nom + "\n" +
-"📞 Téléphone zbi : " + telephone + "\n" +
+"👤 Nom : " + nom + "\n" +
+"📞 Téléphone : " + telephone + "\n" +
 "💇 Service : " + service + "\n" +
 "📅 Date souhaitée : " + date + "\n\n" +
 "💬 Message :\n" + message + "\n\n" +
 "🌸 Merci, j’attends votre confirmation."
 );
 
-  event.target.reset();
+event.target.reset();
 
-  window.location.assign(`https://wa.me/212661137243?text=${texte}`);
-
+window.location.href = "https://wa.me/212661137243?text=" + texte;
 }catch(error){
   alert("❌ Erreur Firebase");
   console.error(error);
