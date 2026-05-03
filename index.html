@@ -110,24 +110,33 @@ window.sendBooking = async function(event){
   const message = document.getElementById("message").value;
 
   try{
-    await addDoc(collection(db, "reservation"), {
-      nom: nom,
-      telephone: telephone,
-      service: service,
-      date: date,
-      message: message,
-      createdAt: new Date()
-    });
+  await addDoc(collection(db, "reservation"), {
+    nom: nom,
+    telephone: telephone,
+    service: service,
+    date: date,
+    message: message,
+    createdAt: new Date()
+  });
 
-    alert("✅ Rendez-vous enregistré !");
-    event.target.reset();
+  const texte = encodeURIComponent(
+    `Bonjour, je souhaite prendre rendez-vous chez Ego - Maison de Beauté.
 
-  }catch(error){
-    alert("❌ Erreur Firebase");
-    console.error(error);
-  }
-};
+Nom: ${nom}
+Téléphone: ${telephone}
+Service: ${service}
+Date souhaitée: ${date}
+Message: ${message}`
+  );
 
+  event.target.reset();
+
+  window.location.assign(`https://wa.me/212661137243?text=${texte}`);
+
+}catch(error){
+  alert("❌ Erreur Firebase");
+  console.error(error);
+}
 </script>
 </body>
 </html>
