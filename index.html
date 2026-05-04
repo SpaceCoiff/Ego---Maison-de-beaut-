@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -530,12 +531,25 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const heuresDisponibles = [
-  "10:00","10:30","11:00","11:30","12:00","12:30",
-  "13:00","13:30","14:00","14:30","15:00","15:30",
-  "16:00","16:30","17:00","17:30","18:00","18:30",
-  "19:00","19:30","20:00"
-];
+function genererHeures(jour){
+  let debut = 10;
+
+  // dimanche = 0
+  if(jour === 0){
+    debut = 11;
+  }
+
+  const heures = [];
+
+  for(let h = debut; h <= 20; h++){
+    heures.push((h < 10 ? "0"+h : h) + ":00");
+    if(h !== 20){
+      heures.push((h < 10 ? "0"+h : h) + ":30");
+    }
+  }
+
+  return heures;
+}
 
 async function chargerHeures(){
   const date = document.getElementById("date").value;
@@ -557,7 +571,8 @@ async function chargerHeures(){
   snapshot.forEach(doc => {
     heuresReservees.push(doc.data().heure);
   });
-
+  const jour = new Date(date).getDay();
+const heuresDisponibles = genererHeures(jour);
   heuresDisponibles.forEach(heure => {
     const option = document.createElement("option");
     option.value = heure;
