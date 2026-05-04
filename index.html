@@ -324,6 +324,65 @@ footer a:hover::after{
   display:block;
   opacity:1;
 }
+.field{
+  position:relative;
+}
+
+/* style input */
+.field input{
+  width:100%;
+  padding:18px;
+  border-radius:25px;
+  border:none;
+  background:#eaeaea;
+  font-size:16px;
+}
+
+/* cacher texte natif */
+input[type="date"],
+input[type="time"]{
+  color:transparent;
+}
+
+/* quand rempli ou focus → visible */
+input[type="date"]:focus,
+input[type="date"]:valid,
+input[type="time"]:focus,
+input[type="time"]:valid{
+  color:#333;
+}
+
+/* faux placeholder */
+.placeholder{
+  position:absolute;
+  left:20px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#999;
+  font-size:15px;
+  pointer-events:none;
+  transition:0.3s;
+}
+
+/* disparaît quand rempli */
+.field input:valid + .placeholder{
+  opacity:0;
+}
+
+/* effet luxe au focus */
+.field input:focus + .placeholder{
+  color:#b28a68;
+  transform:translateY(-150%);
+  font-size:12px;
+}
+.form select#heure{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:15px;
+  outline:none;
+  font-size:15px;
+}
   </style>
 </head>
 <body>
@@ -423,7 +482,18 @@ footer a:hover::after{
     </div>
   </div>
 </section>
-<section class="booking" id="reservation"><div class="container booking-box"><h2>Réservez votre moment beauté</h2><p>Remplissez le formulaire et notre équipe vous contactera rapidement pour confirmer votre rendez-vous.</p><form class="form" onsubmit="sendBooking(event)"><input id="nom" placeholder="Votre nom" required><input id="tel" placeholder="Téléphone" required><select id="service" required><option value="">Choisir un service</option><option>Coiffure</option><option>Onglerie</option><option>Soin visage</option><option>Make-up</option><option>Massage</option></select><input id="date" type="date" required><input id="heure" type="time" required><textarea id="message" placeholder="Message ou préférence d’horaire"></textarea><button class="btn btn-light" type="submit">Envoyer la demande</button></form></div></section>
+<section class="booking" id="reservation"><div class="container booking-box"><h2>Réservez votre moment beauté</h2><p>Remplissez le formulaire et notre équipe vous contactera rapidement pour confirmer votre rendez-vous.</p><form class="form" onsubmit="sendBooking(event)"><input id="nom" placeholder="Votre nom" required><input id="tel" placeholder="Téléphone" required><select id="service" required><option value="">Choisir un service</option><option>Coiffure</option><option>Onglerie</option><option>Soin visage</option><option>Make-up</option><option>Massage</option></select>
+  <div class="field">
+  <input id="date" type="date" required>
+  <span class="placeholder"> Choisir une date</span>
+</div>
+
+<div class="field">
+  <select id="heure" required>
+    <option value=""> Choisir une heure</option>
+  </select>
+</div>
+  <textarea id="message" placeholder="Message ou préférence d’horaire"></textarea><button class="btn btn-light" type="submit">Envoyer la demande</button></form></div></section>
 
 <footer id="contact"><img   src="logo7.png"><h3>Ego — Maison de Beauté</h3><a href="https://maps.app.goo.gl/sJjDMDECdT7B3dxk8" target="_blank" style="text-decoration:underline;color:#b28a68;">📍 Av Mohamed Belhassan El Ouazzani, Souissi, Rabat, Morocco 10000</a><br>
   
@@ -448,8 +518,7 @@ footer a:hover::after{
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-
+import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBBkZHdFxL7heL75HNhpdFsOhf0nHT5gjo",
   authDomain: "ego---maison-de-beaute-bd93a.firebaseapp.com",
@@ -461,7 +530,51 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const heuresDisponibles = [
+  "10:00","10:30","11:00","11:30","12:00","12:30",
+  "13:00","13:30","14:00","14:30","15:00","15:30",
+  "16:00","16:30","17:00","17:30","18:00","18:30",
+  "19:00","19:30","20:00"
+];
 
+async function chargerHeures(){
+  const date = document.getElementById("date").value;
+  const selectHeure = document.getElementById("heure");
+
+  // reset
+  selectHeure.innerHTML = `<option value=""> Choisir une heure</option>`;
+
+  if(!date) return;
+
+  const q = query(
+    collection(db, "reservation"),
+    where("date", "==", date)
+  );
+
+  const snapshot = await getDocs(q);
+  const heuresReservees = [];
+
+  snapshot.forEach(doc => {
+    heuresReservees.push(doc.data().heure);
+  });
+
+  heuresDisponibles.forEach(heure => {
+    const option = document.createElement("option");
+    option.value = heure;
+
+    if(heuresReservees.includes(heure)){
+      option.textContent = heure + " — déjà réservé";
+      option.disabled = true;
+    }else{
+      option.textContent = heure;
+    }
+
+    selectHeure.appendChild(option);
+  });
+}
+
+// écoute changement date
+document.getElementById("date").addEventListener("change", chargerHeures);
 window.toggleMenu = function(){
   document.getElementById('menu').classList.toggle('active');
 };
