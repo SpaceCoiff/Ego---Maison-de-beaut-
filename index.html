@@ -293,6 +293,24 @@ footer a:hover::after{
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(35px)}to{opacity:1;transform:translateY(0)}}
     @media(max-width:850px){.burger{display:block}.menu{position:absolute;top:82px;left:0;width:100%;background:#f8f3ef;flex-direction:column;padding:25px;display:none}.menu.active{display:flex}.about,.cards,.price-grid{grid-template-columns:1fr}.gallery{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:1}.hero p{font-size:17px}}
+  @media(max-width:850px){
+  header.scrolled{
+    background:rgba(248,243,239,.95) !important;
+  }
+
+  header.scrolled .menu{
+    background:#141312 !important;
+  }
+
+  header.scrolled .menu a{
+    color:white !important;
+  }
+
+  header.scrolled .menu .btn{
+    background:#b28a68 !important;
+    color:white !important;
+  }
+}
   </style>
 </head>
 <body>
@@ -336,7 +354,7 @@ footer a:hover::after{
 </section>
 
 <section class="prices" id="tarifs"><div class="container">
-  <div class="section-title"><span>Nos prix</span><h2>Tarifs</h2></div>
+  <div class="section-title"><span>Nos prix</span><h2>Tarifs élégants</h2></div>
   <div class="price-grid">
     <div class="price-card reveal reveal-delay"><h3>Coiffure</h3><div class="price-row"><span>Brushing</span><strong>150 DH</strong></div><div class="price-row"><span>Coupe femme</span><strong>120 DH</strong></div><div class="price-row"><span>Coloration</span><strong>350 DH</strong></div><div class="price-row"><span>Coiffure événement</span><strong>450 DH</strong></div></div>
     <div class="price-card reveal reveal-delay"><h3>Ongles</h3><div class="price-row"><span>Manucure</span><strong>100 DH</strong></div><div class="price-row"><span>Pose gel</span><strong>250 DH</strong></div><div class="price-row"><span>Semi-permanent</span><strong>180 DH</strong></div><div class="price-row"><span>Pédicure</span><strong>150 DH</strong></div></div>
