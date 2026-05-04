@@ -442,20 +442,7 @@ footer a:hover::after{
 
 </div>
 </footer><a href="#accueil" class="top" id="top">↑</a>
-<div id="successMessage" style="
-  position:fixed;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#141312;
-  color:white;
-  padding:15px 25px;
-  border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,.2);
-  display:none;
-  z-index:9999;
-  font-weight:500;
-">
+<div id="successMessage" style="position:fixed;top:25px;left:50%;transform:translateX(-50%);background:#141312;color:white;padding:16px 28px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);display:none;z-index:99999;font-weight:600;">
   ✅ Réservation envoyée avec succès
 </div>
 <script type="module">
@@ -524,13 +511,13 @@ window.sendBooking = async function(event){
 "🌸 Merci, j’attends votre confirmation."
     );
 
-    event.target.reset();
-
-    document.getElementById("successMessage").style.display = "block";
+    const successMessage = document.getElementById("successMessage");
+successMessage.style.display = "block";
 
 setTimeout(()=>{
+  event.target.reset();
   window.location.href = "https://wa.me/212661137243?text=" + texte;
-}, 1200);
+}, 2000);
   }catch(error){
     alert("❌ Erreur Firebase");
     console.error(error);
