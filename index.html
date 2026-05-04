@@ -298,24 +298,28 @@ footer a:hover::after{
     background:rgba(248,243,239,.95) !important;
   }
 
-}
- @media(max-width:850px){
-  .menu{
-    background:#67553e !important;
-  }
-
-  .menu a{
-    color:white !important;
-  }
-
   header.scrolled .menu{
-    background:#67553e !important;
+    background:#141312 !important;
   }
 
   header.scrolled .menu a{
     color:white !important;
   }
-}   
+
+  header.scrolled .menu .btn{
+    background:#b28a68 !important;
+    color:white !important;
+  }
+}
+#successMessage{
+  opacity:0;
+  transition:0.4s;
+}
+
+#successMessage.show{
+  display:block;
+  opacity:1;
+}
   </style>
 </head>
 <body>
@@ -434,7 +438,22 @@ footer a:hover::after{
 
 </div>
 </footer><a href="#accueil" class="top" id="top">↑</a>
-
+<div id="successMessage" style="
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#141312;
+  color:white;
+  padding:15px 25px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  display:none;
+  z-index:9999;
+  font-weight:500;
+">
+  ✅ Réservation envoyée avec succès
+</div>
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
@@ -503,8 +522,11 @@ window.sendBooking = async function(event){
 
     event.target.reset();
 
-    window.location.href = "https://wa.me/212661137243?text=" + texte;
+    document.getElementById("successMessage").style.display = "block";
 
+setTimeout(()=>{
+  window.location.href = "https://wa.me/212661137243?text=" + texte;
+}, 1200);
   }catch(error){
     alert("❌ Erreur Firebase");
     console.error(error);
